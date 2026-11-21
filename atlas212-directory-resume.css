@@ -1,0 +1,21 @@
+/* Atlas 21.2: optional recently explored world. Original Elario violet/amber. */
+.j98-maps .j212-recent-map{
+  box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;margin:13px 0 5px;padding:12px 14px;
+  border:1px solid #d7a069;border-radius:12px;
+  background:linear-gradient(108deg,#392044,#21122f);
+  color:#fff3ec;
+}
+.j98-maps .j212-recent-map[hidden]{display:none}
+.j98-maps .j212-recent-map>div{display:grid;gap:4px;min-width:0;flex:1 1 190px}
+.j98-maps .j212-recent-map strong{font:800 13px/1.35 system-ui;color:#ffd49a}
+.j98-maps .j212-recent-map small{font:500 11px/1.4 system-ui;color:#e7cddd}
+.j98-maps .j212-recent-map a{
+  display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;
+  border:1px solid #ffe0a4;border-radius:9px;
+  background:linear-gradient(110deg,#f5c779,#f4a968);color:#28132f;
+  text-decoration:none;font:850 12px/1.3 system-ui;overflow-wrap:anywhere;
+  max-width:100%;
+}
+.j98-maps .j212-recent-map a:focus-visible{outline:3px solid #ffe9be;outline-offset:3px}
+@media(max-width:420px){.j98-maps .j212-recent-map a{width:100%;justify-content:center;text-align:center}}

@@ -55,6 +55,20 @@
    const modes=buttons.map(b=>b.dataset.worldFilter);
    let mode=modes.includes(params.get('filter'))?params.get('filter'):'all';
    inp.value=params.get('q')||'';
+   // Atlas 21.2: private, allowlisted world-resume link. This is NOT a
+   // collectible/progress save and never edits the canonical Atlas world data.
+   const lastWorldKey='team-jura-directory-last-map-v1';
+   const lastWorldBox=$('#j212Recent'),lastWorldLink=$('#j212RecentLink');
+   function renderLastWorld(){
+     if(!lastWorldBox||!lastWorldLink)return;
+     const item=safe(lastWorldKey,{});
+     // Never turn untrusted device storage into a navigable href.
+     const selected=worlds.find(w=>w.id===item.id&&w.href===item.href);
+     lastWorldBox.hidden=!selected;
+     if(selected){lastWorldLink.href='./'+selected.href;
+       lastWorldLink.textContent='Continue '+selected.name+' ›'}
+   }
+   renderLastWorld();
    function apply(){
      const url=new URL(location.href);
      for(const [key,value] of [['q',inp.value.trim()],['filter',mode==='all'?'':mode]]){
@@ -66,6 +80,7 @@
    function paint(){feature.replaceChildren();additional.replaceChildren();const q=(inp?.value||'').trim().toLocaleLowerCase();let total=0;
      for(const w of worlds){const typeOk=mode==='all'||(mode==='interactive'?(w.kind==='interactive'||w.kind==='schematic'):mode==='research'?w.kind==='research':mode==='limited'?w.kind==='limited':w.kind==='gateway');if(!typeOk||!([w.id,w.name,w.game,w.short,w.grade,w.note,...w.features].join(' ').toLowerCase().includes(q)))continue;
        const card=makeWorld(w,false,true);card.classList.add('directory-card');
+       card.addEventListener('click',()=>{save(lastWorldKey,{id:w.id,href:w.href})});
        const episode=w.id==='tlad'||w.id==='tbogt';
        const summary=episode?'50 sourced seagulls · Saved routes':w.kind==='gateway'?'Individual checklist · Personal pins & routes':w.features.slice(0,3).join(' · ');
        const note=episode?w.note:w.kind==='gateway'?'Built-in verified map calibration pending · Open for full coverage details':w.note;

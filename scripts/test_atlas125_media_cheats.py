@@ -40,7 +40,8 @@ assert 'id="cover-art"' in credits and 'id="reuse"' in credits
 for p in ("index.html","maps.html","map-hub.html","atlas98-style-lab.html"):
     html=source(p)
     for asset in ("atlas98-portal.js","atlas98-worlds.js","atlas98-portal.css"):
-        assert f"./{asset}?v=128" in html,(p,asset)
+        version=212 if p=="maps.html" and asset=="atlas98-portal.js" else 128
+        assert f"./{asset}?v={version}" in html,(p,asset,version)
 
 profiles=json.loads(source("data/atlas-universe-profiles.json"))
 characters=[r for r in profiles["records"] if r["kind"]=="character"]

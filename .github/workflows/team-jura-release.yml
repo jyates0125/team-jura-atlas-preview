@@ -82,6 +82,7 @@ jobs:
           python scripts/test_atlas157_cinematic_world_covers.py
           python scripts/test_atlas155_art_review.py
           python scripts/test_atlas157_directory.py
+          python scripts/test_atlas212_directory.py
           python scripts/test_atlas158_browser_contract.py
           python scripts/test_atlas159_duplicate_nav.py
           python scripts/test_atlas149_leonida_toolbar.py
@@ -115,7 +116,7 @@ jobs:
           node --check atlas192-weapons6.js
           node --check film/atlas192-storyboard.js
           python scripts/test_atlas190_marker_parity.py
-          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py
+          python -m py_compile scripts/test_atlas190_marker_parity.py scripts/test_atlas190_map_browser.py scripts/test_atlas212_directory_browser.py
           node --check atlas-iv.js
           node --check atlas190-sa-route.js
           node --check atlas186-cayo-route.js
@@ -153,6 +154,7 @@ jobs:
           python scripts/test_atlas171_browser.py
           python scripts/test_atlas186_route_browser.py
           python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Chromium)
@@ -205,6 +207,7 @@ jobs:
           python scripts/test_atlas171_browser.py
           python scripts/test_atlas186_route_browser.py
           python scripts/test_atlas190_map_browser.py
+          python scripts/test_atlas212_directory_browser.py
           python scripts/test_atlas201_squalo_browser.py
           python scripts/test_atlas191_first_visit_browser.py
       - name: Independently capture designed-brand screenshots (Edge)
