@@ -188,7 +188,7 @@ jobs:
           python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Chromium)
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: team-jura-atlas-design-review-chromium
           path: qa-evidence/chromium/
@@ -247,7 +247,7 @@ jobs:
           python scripts/capture_design_review.py
       - name: Save Elario designed-brand review screenshots (Edge)
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: team-jura-atlas-design-review-edge
           path: qa-evidence/msedge/
@@ -296,7 +296,7 @@ jobs:
         run: python scripts/test_atlas220_salvage_art_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas22-vi-focus-chromium
           path: qa-evidence/chromium/
@@ -343,7 +343,7 @@ jobs:
         run: python scripts/test_atlas220_salvage_art_browser.py
       - name: Save Atlas 22.0 focus screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas22-vi-focus-edge
           path: qa-evidence/msedge/
@@ -366,7 +366,7 @@ jobs:
         run: |
           node scripts/build-cloudflare.cjs
           python scripts/audit_published.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: team-jura-atlas-cloudflare-validated-after-chromium-and-edge
           path: public/
