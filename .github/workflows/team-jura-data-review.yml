@@ -27,7 +27,7 @@ jobs:
               assert isinstance(data['records'],dict) and len(data['records'])>0
               print(g,'landmarks',data['count'])
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: gtadb-attributed-iv-v-datasets-review-before-commit
           path: |
