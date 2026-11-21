@@ -47,7 +47,16 @@ for token in ('hitTargets.push','const clustered=size>1','getComputedStyle' if F
 for token in ('j190-iv-scope','GTA IV · 200 Flying Rats','50 Seagulls','j190-iv-found',
               'j190-marker-status','pigeon-locator','MIT'):
     assert token in ivhtml,token
-assert 'atlas-iv.js?v=201' in ivhtml and 'atlas-iv.css?v=200' in ivhtml
+assert 'atlas-iv.js?v=210' in ivhtml and 'atlas-iv.css?v=200' in ivhtml
+# New touch support must preserve accessible single-pointer, marker, wheel and keyboard behavior.
+for token in ("const activePointers=new Map()", "activePointers.size>=2",
+              "pinch.zoom+Math.log2(distance/pinch.distance)",
+              "canvas.addEventListener('pointercancel'",
+              "canvas.addEventListener('wheel'",
+              "canvas.addEventListener('keydown'",
+              "if(found.members.length===1){select(found.members[0],false);return}"):
+    assert token in iv,token
+assert "pinch with two fingers" in ivhtml.lower()
 pack=json.loads(read('data/atlas-sa-150-sourced-pins.json'))
 assert pack['schema']==1 and len(pack['records'])==150
 assert pack['counts']=={'snapshots':50,'horseshoes':50,'oysters':50}

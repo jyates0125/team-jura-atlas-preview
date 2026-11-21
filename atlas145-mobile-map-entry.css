@@ -12,3 +12,39 @@
 #sidebar .j145-open-map:focus-visible{outline:3px solid #ffdea1;outline-offset:3px}
 @media(max-width:700px){#sidebar .j145-open-map{font-size:13px}}
 @media(prefers-reduced-motion:reduce){#sidebar .j145-open-map{scroll-behavior:auto}}
+
+
+/* Atlas 21.1: keep the three real game-map pages inside narrow phone widths.
+ * The navigation remains horizontally scrollable in its own row. Do NOT clip
+ * the page/body or mask overflowing map controls; preserve map touch handling.
+ * This is intentionally scoped to Story/Online/VI map pages only. */
+@media (max-width:700px){
+ body.j128-map-chrome .topbar{
+  box-sizing:border-box;width:100%;max-width:100%;min-width:0;
+ }
+ body.j128-map-chrome .topbar>.brand{
+  min-width:0;max-width:100%;
+ }
+ body.j128-map-chrome .topbar>nav{
+  display:flex;box-sizing:border-box;min-width:0;width:100%;
+  max-width:100%;flex:0 1 100%;overflow-x:auto;overflow-y:hidden;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+ }
+ body.j128-map-chrome .topbar>nav>a{flex-shrink:0}
+ body.j128-map-chrome .shell{
+  box-sizing:border-box;display:flex;flex-direction:column;
+  width:100%;max-width:100%;min-width:0;align-items:stretch;
+ }
+ body.j128-map-chrome .shell>.sidebar,
+ body.j128-map-chrome .shell>#sidebar{
+  box-sizing:border-box;width:100%;max-width:100%;min-width:0;
+  flex:0 0 auto;
+ }
+ body.j128-map-chrome .shell>.map-wrap{
+  box-sizing:border-box;width:100%;max-width:100%;min-width:0;
+ }
+ body.j128-map-chrome #sidebar .j145-open-map{
+  box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;
+  white-space:normal;overflow-wrap:anywhere;
+ }
+}

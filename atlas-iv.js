@@ -250,15 +250,77 @@ $('j190-iv-hide-found')?.addEventListener('change',update);
 $('j190-iv-found')?.addEventListener('click',()=>{if(!selected?.isBird)return;
  if(birdFound.has(selected.id))birdFound.delete(selected.id);else birdFound.add(selected.id);
  saveBirds();select(selected,false);});
-$('classicSearch').addEventListener('input',update);$('classicSort').addEventListener('change',update);$('classicLayer').addEventListener('change',e=>{layer=e.target.value;loadCount=failCount=0;render()});$('showAll').onclick=()=>{onlyFav=false;categories='all';$('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');update()};$('showFav').onclick=()=>{onlyFav=!onlyFav;$('showFav').setAttribute('aria-pressed',String(onlyFav));update()};$('classicPins').onclick=()=>{showPins=!showPins;$('classicPins').setAttribute('aria-pressed',String(showPins));render()};$('classicFit').onclick=()=>{center={x:150,y:40};zoom=3.4;update()};$('classicPlus').onclick=()=>{zoom=Math.min(5,zoom+.5);render()};$('classicMinus').onclick=()=>{zoom=Math.max(.2,zoom-.5);render()};$('detailFavorite').onclick=()=>{if(!selected)return;if(favorites.has(selected.id))favorites.delete(selected.id);else favorites.add(selected.id);lsSave();update();$('detailFavorite').textContent=favorites.has(selected.id)?'★ Unfavorite':'☆ Favorite'};$('detailRoute').onclick=addRoute;$('routeFit').onclick=()=>{if(!route.length)return;const xs=route.map(r=>r.x),ys=route.map(r=>r.y);center={x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2};zoom=Math.max(.6,Math.min(5,Math.log2(Math.min(w/((Math.max(...xs)-Math.min(...xs)+350)/32),h/((Math.max(...ys)-Math.min(...ys)+350)/32)))));render()};$('routeClear').onclick=()=>{route=[];finishId='';saveRoute()};$('routeCopy').onclick=async()=>{const str=route.map((r,i)=>`${i+1}. ${r.name}: ${r.x.toFixed(1)}, ${r.y.toFixed(1)}`).join('\n');try{await navigator.clipboard.writeText(str);$('routeStatus').textContent='Route stops copied.'}catch{$('routeStatus').textContent='Copy requires HTTPS. Select route text manually.'}};$('detailShare').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('loc',selected.id);try{await navigator.clipboard.writeText(url.href);$('detailShare').textContent='✓ Copied'}catch{$('detailShare').textContent='Use browser address bar'}};$('closeDetail').onclick=()=>{selected=null;$('detailIntro').hidden=false;$('detailContent').hidden=true;try{const url=new URL(location.href);url.searchParams.delete('loc');history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};let dragging=null,moved=false;canvas.addEventListener('pointerdown',e=>{dragging={x:e.clientX,y:e.clientY,cx:center.x,cy:center.y};moved=false;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-dragging.x,dy=e.clientY-dragging.y;if(Math.abs(dx)+Math.abs(dy)>5)moved=true;center.x=dragging.cx-dx/scale();center.y=dragging.cy+dy/scale();render()});canvas.addEventListener('pointerup',e=>{if(!dragging)return;dragging=null;if(moved)return;const box=canvas.getBoundingClientRect();const mx=e.clientX-box.left,my=e.clientY-box.top;let found=null,best=Infinity;
- for(const hit of hitTargets){const d=Math.hypot(hit.x-mx,hit.y-my);if(d<=hit.radius&&d<best){best=d;found=hit}}
+$('classicSearch').addEventListener('input',update);$('classicSort').addEventListener('change',update);$('classicLayer').addEventListener('change',e=>{layer=e.target.value;loadCount=failCount=0;render()});$('showAll').onclick=()=>{onlyFav=false;categories='all';$('classicSearch').value='';$('showFav').setAttribute('aria-pressed','false');update()};$('showFav').onclick=()=>{onlyFav=!onlyFav;$('showFav').setAttribute('aria-pressed',String(onlyFav));update()};$('classicPins').onclick=()=>{showPins=!showPins;$('classicPins').setAttribute('aria-pressed',String(showPins));render()};$('classicFit').onclick=()=>{center={x:150,y:40};zoom=3.4;update()};$('classicPlus').onclick=()=>{zoom=Math.min(5,zoom+.5);render()};$('classicMinus').onclick=()=>{zoom=Math.max(.2,zoom-.5);render()};$('detailFavorite').onclick=()=>{if(!selected)return;if(favorites.has(selected.id))favorites.delete(selected.id);else favorites.add(selected.id);lsSave();update();$('detailFavorite').textContent=favorites.has(selected.id)?'★ Unfavorite':'☆ Favorite'};$('detailRoute').onclick=addRoute;$('routeFit').onclick=()=>{if(!route.length)return;const xs=route.map(r=>r.x),ys=route.map(r=>r.y);center={x:(Math.min(...xs)+Math.max(...xs))/2,y:(Math.min(...ys)+Math.max(...ys))/2};zoom=Math.max(.6,Math.min(5,Math.log2(Math.min(w/((Math.max(...xs)-Math.min(...xs)+350)/32),h/((Math.max(...ys)-Math.min(...ys)+350)/32)))));render()};$('routeClear').onclick=()=>{route=[];finishId='';saveRoute()};$('routeCopy').onclick=async()=>{const str=route.map((r,i)=>`${i+1}. ${r.name}: ${r.x.toFixed(1)}, ${r.y.toFixed(1)}`).join('\n');try{await navigator.clipboard.writeText(str);$('routeStatus').textContent='Route stops copied.'}catch{$('routeStatus').textContent='Copy requires HTTPS. Select route text manually.'}};$('detailShare').onclick=async()=>{const url=new URL(location.href);url.searchParams.set('loc',selected.id);try{await navigator.clipboard.writeText(url.href);$('detailShare').textContent='✓ Copied'}catch{$('detailShare').textContent='Use browser address bar'}};$('closeDetail').onclick=()=>{selected=null;$('detailIntro').hidden=false;$('detailContent').hidden=true;try{const url=new URL(location.href);url.searchParams.delete('loc');history.replaceState(null,'',url.pathname+url.search+url.hash)}catch{}update()};// Atlas 21.0: true two-finger pinch and single-finger pan on iPhone/Android.
+// Preserve the same map-coordinate anchor under the fingers while zooming.
+let dragging=null,moved=false,pinch=null;
+const activePointers=new Map();
+const localPoint=e=>{const box=canvas.getBoundingClientRect();return{x:e.clientX-box.left,y:e.clientY-box.top}};
+function beginPinch(){
+ const pts=[...activePointers.values()].slice(0,2);
+ if(pts.length<2)return;
+ const mid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};
+ pinch={distance:Math.max(1,Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y)),zoom,anchor:world(mid.x,mid.y)};
+ dragging=null;moved=true;
+}
+canvas.addEventListener('pointerdown',e=>{
+ if(e.pointerType==='mouse'&&e.button!==0)return;
+ activePointers.set(e.pointerId,localPoint(e));
+ try{canvas.setPointerCapture(e.pointerId)}catch(_){}
+ if(activePointers.size===1){
+  dragging={x:e.clientX,y:e.clientY,cx:center.x,cy:center.y};
+  pinch=null;moved=false;
+ }else beginPinch();
+});
+canvas.addEventListener('pointermove',e=>{
+ if(!activePointers.has(e.pointerId))return;
+ activePointers.set(e.pointerId,localPoint(e));
+ if(activePointers.size>=2){
+  if(!pinch)beginPinch();
+  const pts=[...activePointers.values()].slice(0,2);
+  const mid={x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2};
+  const distance=Math.max(1,Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y));
+  zoom=Math.max(.2,Math.min(5,pinch.zoom+Math.log2(distance/pinch.distance)));
+  const after=world(mid.x,mid.y);
+  center.x+=pinch.anchor.x-after.x;
+  center.y+=pinch.anchor.y-after.y;
+  moved=true;render();return;
+ }
+ if(!dragging)return;
+ const dx=e.clientX-dragging.x,dy=e.clientY-dragging.y;
+ if(Math.abs(dx)+Math.abs(dy)>5)moved=true;
+ center.x=dragging.cx-dx/scale();center.y=dragging.cy+dy/scale();render();
+});
+function endPointer(e,cancelled=false){
+ if(!activePointers.has(e.pointerId))return;
+ activePointers.delete(e.pointerId);
+ try{if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId)}catch(_){}
+ if(activePointers.size>=2){beginPinch();return}
+ if(activePointers.size===1){
+  const [id,pt]=activePointers.entries().next().value;
+  const box=canvas.getBoundingClientRect();
+  dragging={x:pt.x+box.left,y:pt.y+box.top,cx:center.x,cy:center.y};
+  pinch=null;moved=true;return;
+ }
+ dragging=null;pinch=null;
+ if(cancelled||moved)return;
+ const {x:mx,y:my}=localPoint(e);
+ let found=null,best=Infinity;
+ for(const hit of hitTargets){
+  const d=Math.hypot(hit.x-mx,hit.y-my);
+  if(d<=hit.radius&&d<best){best=d;found=hit}
+ }
  if(!found)return;
  if(found.members.length===1){select(found.members[0],false);return}
  const x=found.members.reduce((n,r)=>n+r.x,0)/found.members.length;
  const y=found.members.reduce((n,r)=>n+r.y,0)/found.members.length;
  if(zoom<4.99){center={x,y};zoom=Math.min(5,zoom+0.85);render();return}
  const nearest=found.members.slice().sort((a,b)=>Math.hypot(point(a.x,a.y).x-mx,point(a.x,a.y).y-my)-Math.hypot(point(b.x,b.y).x-mx,point(b.x,b.y).y-my))[0];
- select(nearest,false);});canvas.addEventListener('wheel',e=>{e.preventDefault();const box=canvas.getBoundingClientRect(),mx=e.clientX-box.left,my=e.clientY-box.top,before=world(mx,my);zoom=Math.max(.2,Math.min(5,zoom+(e.deltaY<0?.23:-.23)));const after=world(mx,my);center.x+=before.x-after.x;center.y+=before.y-after.y;render()},{passive:false});canvas.addEventListener('keydown',e=>{const d=140/scale();if(e.key==='ArrowRight')center.x+=d;else if(e.key==='ArrowLeft')center.x-=d;else if(e.key==='ArrowUp')center.y+=d;else if(e.key==='ArrowDown')center.y-=d;else if(e.key==='+')zoom=Math.min(5,zoom+.25);else if(e.key==='-')zoom=Math.max(.2,zoom-.25);else return;e.preventDefault();render()});// Read-only GTA IV 3D bridge; exact same records, filters, selection, map and player saves.
+ select(nearest,false);
+}
+canvas.addEventListener('pointerup',e=>endPointer(e));
+canvas.addEventListener('pointercancel',e=>endPointer(e,true));
+canvas.addEventListener('lostpointercapture',e=>endPointer(e,true));
+canvas.addEventListener('wheel',e=>{e.preventDefault();const box=canvas.getBoundingClientRect(),mx=e.clientX-box.left,my=e.clientY-box.top,before=world(mx,my);zoom=Math.max(.2,Math.min(5,zoom+(e.deltaY<0?.23:-.23)));const after=world(mx,my);center.x+=before.x-after.x;center.y+=before.y-after.y;render()},{passive:false});canvas.addEventListener('keydown',e=>{const d=140/scale();if(e.key==='ArrowRight')center.x+=d;else if(e.key==='ArrowLeft')center.x-=d;else if(e.key==='ArrowUp')center.y+=d;else if(e.key==='ArrowDown')center.y-=d;else if(e.key==='+')zoom=Math.min(5,zoom+.25);else if(e.key==='-')zoom=Math.max(.2,zoom-.25);else return;e.preventDefault();render()});// Read-only GTA IV 3D bridge; exact same records, filters, selection, map and player saves.
 window.TeamJuraIV3DBridge=Object.freeze({
  state:()=>({game:4,x:center.x,y:center.y,z:zoom,layer,selectedId:selected?.id||null}),
  visible:()=>showPins?filtered.filter(r=>Number.isFinite(r.x)&&Number.isFinite(r.y)).slice(0,600).map(r=>({

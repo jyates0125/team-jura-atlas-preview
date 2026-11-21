@@ -12,7 +12,11 @@ if not (PUBLIC/'atlas-iv.html').is_file() or not (PUBLIC/'atlas-sa.html').is_fil
     raise SystemExit('Build the actual Cloudflare public/ output first')
 class Quiet(SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
-server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
+class AtlasTestServer(ThreadingHTTPServer):
+    # Rapid tile/page transitions can exceed the default Windows accept backlog.
+    request_queue_size=64
+    daemon_threads=True
+server=AtlasTestServer(('127.0.0.1',0),partial(Quiet,directory=str(PUBLIC)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 base='http://127.0.0.1:%s/'%server.server_port
 engine=os.getenv('ATLAS_BROWSER','chromium')
@@ -172,9 +176,25 @@ try:
    page.locator('#worldSearch').fill('no such destination')
    page.locator('#resetWorldSearch').click()
    expect(page.locator('.directory-card')).to_have_count(13)
-   page.goto(base+'heist-fleeca.html',wait_until='domcontentloaded')
+   # Finish previous map fetches and require Fleeca's deferred bundle to load.
+   # Windows Edge can occasionally abort local test-server requests while
+   # unloading tile-heavy maps. Retry the full page only if initialization
+   # never happened; a second missed bootstrap remains a hard regression.
+   page.goto('about:blank',wait_until='load')
+   page.goto(base+'heist-fleeca.html',wait_until='load',timeout=45000)
+   try:
+    expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=7000)
+   except AssertionError:
+    page.reload(wait_until='load',timeout=45000)
+    expect(page.locator('#progress')).to_have_text('0 / 3 tracked',timeout=15000)
    page.locator('input[data-step]').first.check()
-   page.goto(base+'heists.html',wait_until='domcontentloaded')
+   # Cross-page progress must persist before the heist directory filters it.
+   page.wait_for_function("""() => {
+     try { return Object.values(JSON.parse(localStorage.getItem('teamjura-heist-fleeca') || '{}')).some(v=>v===true); }
+     catch (_) { return false; }
+   }""",timeout=15000)
+   expect(page.locator('#progress')).to_have_text('1 / 3 tracked')
+   page.goto(base+'heists.html',wait_until='load')
    page.locator('#heistStarted').check()
    expect(page.locator('#heistCount')).to_have_text('1 of 15 workspaces')
    expect(page.locator('.cards .card:visible h2')).to_have_text('The Fleeca Job')
